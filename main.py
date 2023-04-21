@@ -1,5 +1,5 @@
 import argparse
-from system_functions import load_settings
+from system_functions import load_settings, load_text
 SETTINGS_FILE = "settings.json"
 
 if __name__ == '__main__':
@@ -12,6 +12,7 @@ if __name__ == '__main__':
     settings = load_settings(args.settings) if args.settings else load_settings(SETTINGS_FILE)
     if settings:
         if args.enumeration:
-            pass
+            original_hash = load_text(settings['hash_file'])
+            last_numbers = load_text(settings['last_numbers_file'])
         else:
             pass
