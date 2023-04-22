@@ -2,7 +2,8 @@ import json
 
 SETTINGS = {
     'card_number_file': 'files/card_number.txt',
-    'statistic_file': 'files/statistics.txt'
+    'statistics_file': 'files/statistics.txt',
+    'visual_directory': 'files'
 }
 
 if __name__ == '__main__':

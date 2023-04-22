@@ -1,6 +1,5 @@
 import hashlib
 from typing import Union
-import logging
 import multiprocessing as mp
 from tqdm import tqdm
 
@@ -20,11 +19,10 @@ def check_card_number(main_card_number_part: int) -> Union[str, bool]:
 
 def enumerate_card_number(pools=CORES) -> str:
     with mp.Pool(processes=pools) as p:
-        for result in p.map(check_card_number, tqdm(range(0, 1000000),
-                                                    desc='The process of enumerating the true card number: ', ncols=120)):
+        for result in p.map(check_card_number,
+                            tqdm(range(0, 1000000),
+                                 desc='The process of enumerating the true card number: ', ncols=120)):
             if result:
                 p.terminate()
                 return result
     return ''
-
-# tqdm(range(0, 1000000), desc='The process of enumerating the true card number: ', ncols=120):
