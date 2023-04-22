@@ -7,6 +7,13 @@ logger.setLevel('INFO')
 
 
 def visualize_statistics(statistics: dict, visual_directory: str) -> None:
+    """
+    The function visualize statistics and save the result to some directory.
+
+    :param statistics: statistics for visualization.
+    :param visual_directory: path to directory.
+    :return: None.
+    """
     fig = plt.figure(figsize=(30, 5))
     plt.ylabel('Work time, s')
     plt.xlabel('Processes')

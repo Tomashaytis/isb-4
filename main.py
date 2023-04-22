@@ -13,7 +13,7 @@ logger.setLevel('INFO')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-sbf', '--settings', type=str, help='Использование собственного файла с настройками')
+    parser.add_argument('-set', '--settings', type=str, help='Использование собственного файла с настройками')
     parser.add_argument('-sts', '--statistics', help='Сохраняет статистику в файл')
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('-enu', '--enumeration', type=int, help='Подбирает номер карты по её хэшу (Введите количество '

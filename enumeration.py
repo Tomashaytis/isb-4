@@ -1,5 +1,5 @@
 import hashlib
-from typing import Union
+from typing import Union, Optional
 import multiprocessing as mp
 from tqdm import tqdm
 
@@ -10,6 +10,12 @@ CORES = mp.cpu_count()
 
 
 def check_card_number(main_card_number_part: int) -> Union[str, bool]:
+    """
+    The function assemblies a card number and checks the matching the true hash value and a card number hash.
+
+    :param main_card_number_part: unknown part of card_number.
+    :return: card number if a card number hash matches to the true hash value and False otherwise.
+    """
     for card_bin in BINS:
         card_number = f'{card_bin}{main_card_number_part:06d}{LAST_NUMBERS}'
         if hashlib.sha384(card_number.encode()).hexdigest() == ORIGINAL_HASH:
@@ -17,7 +23,13 @@ def check_card_number(main_card_number_part: int) -> Union[str, bool]:
     return False
 
 
-def enumerate_card_number(pools=CORES) -> str:
+def enumerate_card_number(pools=CORES) -> Optional[str]:
+    """
+    The function enumerates the true card number by known hash.
+
+    :param pools: number of generated processes.
+    :return: enumerated card number if it was found and None instead.
+    """
     with mp.Pool(processes=pools) as p:
         for result in p.map(check_card_number,
                             tqdm(range(0, 1000000),
@@ -25,4 +37,4 @@ def enumerate_card_number(pools=CORES) -> str:
             if result:
                 p.terminate()
                 return result
-    return ''
+    return None

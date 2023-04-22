@@ -1,4 +1,10 @@
 def luhn_algorithm(card_number: str) -> bool:
+    """
+    The function verify the correction of card number using the Luhn algorithm.
+
+    :param card_number: card number.
+    :return: result of verification.
+    """
     card_numbers = list(map(int, card_number))
     card_numbers = card_numbers[::-1]
     for i in range(1, len(card_numbers), 2):
