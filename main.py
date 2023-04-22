@@ -1,6 +1,9 @@
+import os
 import argparse
-from system_functions import load_settings, load_text
-SETTINGS_FILE = "settings.json"
+from system_functions import load_settings, load_text, write_text, load_list
+from enumeration import enumerate_number
+
+SETTINGS_FILE = os.path.join('files', 'settings.json')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -14,5 +17,9 @@ if __name__ == '__main__':
         if args.enumeration:
             original_hash = load_text(settings['hash_file'])
             last_numbers = load_text(settings['last_numbers_file'])
+            bins = load_list(settings['bins_file'])
+            print(bins)
+            card_number = enumerate_number(original_hash, last_numbers, bins)
+            write_text(card_number, settings['card_number_file'])
         else:
             pass

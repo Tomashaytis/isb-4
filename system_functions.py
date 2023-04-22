@@ -28,10 +28,21 @@ def load_text(file_name: str) -> str:
 
 
 def load_list(file_name: str) -> list:
+    text = []
     try:
         with open(file_name, mode='r') as text_file:
             text = text_file.readlines()
+        text = list(map(int, text))
         logging.info(f' List was successfully read from file {file_name}')
     except OSError as err:
         logging.warning(f' Text was not read from file {file_name}\n{err}')
     return text
+
+
+def write_text(text: str, file_name: str) -> None:
+    try:
+        with open(file_name, mode='w') as text_file:
+            text_file.write(text)
+        logging.info(f' Text was successfully written to file {file_name}')
+    except OSError as err:
+        logging.warning(f' Text was not written to file {file_name}\n{err}')
