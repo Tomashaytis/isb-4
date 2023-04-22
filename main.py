@@ -2,9 +2,10 @@ import os
 import time
 import argparse
 import logging
-from system_functions import load_settings, write_text, add_to_statistics, load_statistics
+from system_functions import load_settings, load_text, write_text, add_to_statistics, load_statistics
 from enumeration import enumerate_card_number
 from vizualization import visualize_statistics
+from correction import luhn_algorithm
 
 SETTINGS_FILE = os.path.join('files', 'settings.json')
 logger = logging.getLogger()
@@ -37,4 +38,8 @@ if __name__ == '__main__':
             statistics = load_statistics(settings['statistics_file'])
             visualize_statistics(statistics, settings['visual_directory'])
         else:
-            pass
+            card_number = load_text(settings['card_number_file'])
+            if luhn_algorithm(card_number):
+                logging.info(f" Card number {card_number} is correct")
+            else:
+                logging.info(f" Card number {card_number} is not correct")
