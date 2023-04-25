@@ -9,15 +9,15 @@ LAST_NUMBERS = 1512
 CORES = mp.cpu_count()
 
 
-def check_card_number(main_card_number_part: int) -> Union[str, bool]:
+def check_card_number(main_card_number_part: int, bins: list, last_numbers: int) -> Union[str, bool]:
     """
     The function assemblies a card number and checks the matching the true hash value and a card number hash.
 
     :param main_card_number_part: unknown part of card_number.
     :return: card number if a card number hash matches to the true hash value and False otherwise.
     """
-    for card_bin in BINS:
-        card_number = f'{card_bin}{main_card_number_part:06d}{LAST_NUMBERS}'
+    for card_bin in bins:
+        card_number = f'{card_bin}{main_card_number_part:06d}{last_numbers}'
         if hashlib.sha384(card_number.encode()).hexdigest() == ORIGINAL_HASH:
             return card_number
     return False
@@ -30,10 +30,13 @@ def enumerate_card_number(pools=CORES) -> Optional[str]:
     :param pools: number of generated processes.
     :return: enumerated card number if it was found and None instead.
     """
+    arguments = []
+    for i in range(1000000):
+        arguments.append((i, BINS, LAST_NUMBERS))
     with mp.Pool(processes=pools) as p:
-        for result in p.map(check_card_number,
-                            tqdm(range(0, 1000000),
-                                 desc='The process of enumerating the true card number: ', ncols=120)):
+        for result in p.starmap(check_card_number,
+                                tqdm(arguments,
+                                     desc='The process of enumerating the true card number: ', ncols=120)):
             if result:
                 p.terminate()
                 return result
