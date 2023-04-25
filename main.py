@@ -2,7 +2,7 @@ import os
 import time
 import argparse
 import logging
-from system_functions import load_settings, load_text, write_text, add_to_statistics, load_statistics
+from system_functions import load_settings, load_text, load_tuple, write_text, add_to_statistics, load_statistics
 from enumeration import enumerate_card_number
 from vizualization import visualize_statistics
 from correction import luhn_algorithm
@@ -24,8 +24,11 @@ if __name__ == '__main__':
     settings = load_settings(args.settings) if args.settings else load_settings(SETTINGS_FILE)
     if settings:
         if args.enumeration:
+            original_hash = load_text(settings['hash_file'])
+            bins = load_tuple(settings['bins_file'])
+            last_numbers = load_text(settings['last_numbers_file'])
             t0 = time.perf_counter()
-            card_number = enumerate_card_number(args.enumeration)
+            card_number = enumerate_card_number(original_hash, bins, last_numbers, args.enumeration)
             t1 = time.perf_counter()
             if args.statistics:
                 add_to_statistics(args.enumeration, t1 - t0, settings['statistic_file'])

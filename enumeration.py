@@ -3,36 +3,40 @@ from typing import Union, Optional
 import multiprocessing as mp
 from tqdm import tqdm
 
-BINS = (530114, 544716, 552702, 559992, 512347, 518365, 521155, 522477, 542247, 543367, 543762, 548328, 548791)
-ORIGINAL_HASH = '50c6b2ca7a569f006d23b3be8007dd775652c1028c2c44bbb3847008956e179e4f8cc315d8076cf97483279e44075424'
-LAST_NUMBERS = 1512
 CORES = mp.cpu_count()
 
 
-def check_card_number(main_card_number_part: int, bins: list, last_numbers: int) -> Union[str, bool]:
+def check_card_number(main_card_number_part: int, original_hash: str, bins: tuple, last_numbers: str)\
+        -> Union[str, bool]:
     """
     The function assemblies a card number and checks the matching the true hash value and a card number hash.
 
     :param main_card_number_part: unknown part of card_number.
+    :param original_hash: hash value of desired card number.
+    :param bins: tuple of possible card BINs.
+    :param last_numbers: four last digits of desired card number.
     :return: card number if a card number hash matches to the true hash value and False otherwise.
     """
     for card_bin in bins:
         card_number = f'{card_bin}{main_card_number_part:06d}{last_numbers}'
-        if hashlib.sha384(card_number.encode()).hexdigest() == ORIGINAL_HASH:
+        if hashlib.sha384(card_number.encode()).hexdigest() == original_hash:
             return card_number
     return False
 
 
-def enumerate_card_number(pools=CORES) -> Optional[str]:
+def enumerate_card_number(original_hash: str, bins: tuple, last_numbers: str, pools=CORES) -> Optional[str]:
     """
     The function enumerates the true card number by known hash.
 
+    :param original_hash: hash value of desired card number.
+    :param bins: tuple of possible card BINs.
+    :param last_numbers: four last digits of desired card number.
     :param pools: number of generated processes.
     :return: enumerated card number if it was found and None instead.
     """
     arguments = []
     for i in range(1000000):
-        arguments.append((i, BINS, LAST_NUMBERS))
+        arguments.append((i, original_hash, bins, last_numbers))
     with mp.Pool(processes=pools) as p:
         for result in p.starmap(check_card_number,
                                 tqdm(arguments,

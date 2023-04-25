@@ -55,16 +55,22 @@ def write_text(text: str, file_name: str) -> None:
         logging.warning(f' Text was not written to the file "{file_name}"\n{err}')
 
 
-def load_list(file_name: str) -> list:
-    text = []
+def load_tuple(file_name: str) -> tuple:
+    """
+    The function loads tuple of numbers from txt file.
+
+    :param file_name: path to txt file.
+    :return: tuple of numbers.
+    """
+    data = ()
     try:
         with open(file_name, mode='r') as text_file:
-            text = text_file.readlines()
-        text = list(map(int, text))
+            data = text_file.readlines()
+        data = tuple(map(int, data))
         logging.info(f' List was successfully read from file "{file_name}"')
     except OSError as err:
         logging.warning(f' List was not read from file "{file_name}"\n{err}')
-    return text
+    return data
 
 
 def load_statistics(file_name: str) -> dict:
